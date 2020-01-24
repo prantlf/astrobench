@@ -4,6 +4,9 @@
   "version": "0.1.2",
   "description": "Library for JavaScript benchmarks based on Benchmark.js",
   "main": "dist/astrobench.js",
+  "files": [
+    "dist"
+  ],
   "directories": {
     "example": "examples"
   },

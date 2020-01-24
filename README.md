@@ -1,7 +1,6 @@
 # Astrobench
 
 [![NPM version](https://badge.fury.io/js/astrobench.svg)](http://badge.fury.io/js/astrobench)
-[![Bower version](https://badge.fury.io/bo/astrobench.svg)](http://badge.fury.io/bo/astrobench)
 
 > Make the Web Faster
 
@@ -13,22 +12,16 @@ Easy way to create test cases. Provides rich and pretty UI.
 
 ## Installation
 
-Install with [bower](http://bower.io/)
+Install with [npm](https://www.npmjs.org/)
 
 ```
-$ bower install astrobench --save
-```
-
-Or with [npm](https://www.npmjs.org/)
-
-```
-$ npm install astrobench --save
+$ npm i astrobench
 ```
 
 ## Use it
 
 ```html
-$ bower install astrobench --save
+$ npm i astrobench
 $ $EDITOR tests.html
 
 <!DOCTYPE html>
@@ -36,13 +29,13 @@ $ $EDITOR tests.html
 <head>
   <meta charset="UTF-8">
   <title>Performance tests</title>
-  <link rel="stylesheet" href="bower_components/astrobench/dist/astrobench.min.css">
+  <link rel="stylesheet" href="node_modules/astrobench/dist/astrobench.min.css">
 </head>
 <body>
   <!-- Wrapper for tests -->
   <div id="astrobench"></div>
 
-  <script src="bower_components/astrobench/dist/astrobench.min.js"></script>
+  <script src="node_modules/astrobench/dist/astrobench.min.js"></script>
   <script>
     // A test suite begins with a call to the global function `suite` with two parameters:
     // a string and a function.
@@ -94,6 +87,15 @@ $ $EDITOR tests.html
 And enjoy the result.
 
 [![sample.png][3]][1]
+
+## Without Installation
+
+Instead of installing the package locally, you can load the script and stylesheet from [unpkg](https://unpkg.com). The URLs will look like this:
+
+```html
+<link rel="stylesheet" href="https://unpkg.com/astrobench/dist/astrobench.min.css">
+<script src="https://unpkg.com/astrobench/dist/astrobench.min.js"></script>
+```
 
 [1]: http://astrobench.js.org
 [2]: https://cdn.rawgit.com/kupriyanenko/astrobench/gh-pages/astro.png

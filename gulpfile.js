@@ -1,4 +1,6 @@
 const { task, series, parallel, src, dest, watch } = require('gulp');
+const log = require('fancy-log');
+const connect = require('gulp-connect');
 const browserify = require('browserify');
 const source = require('vinyl-source-stream');
 const buffer = require('vinyl-buffer');
@@ -21,10 +23,10 @@ const banner = `/*!
 
 let browserifyConfig = { debug: false };
 
-task('dev', done => {
+const dev = done => {
   browserifyConfig = { debug: true };
   done();
-});
+};
 
 task('browserify', () =>
   browserify(Object.assign({ entries: './src/ui.js' }, browserifyConfig))
@@ -60,7 +62,36 @@ task('minify-style', () =>
 task('default', parallel(
   series('browserify', 'uglify'), series('copy-style', 'minify-style')));
 
-task('watch', () => {
-  watch(['src/**/*.js', 'src/**/*.html'], series('dev', 'browserify'));
-  watch('src/**/*.css', series('copy-style'));
+task('serve', done => {
+  connect.server({
+    root: '.',
+    livereload: true
+  }, function () {
+    this.server.on('close', done);
+  });
 });
+
+const reload = () =>
+  src(['dist/*'], { read: false })
+    .pipe(connect.reload());
+
+const reloadExample = file => {
+  log(`Reloading ${file}`);
+  src(file, { read: false })
+    .pipe(connect.reload());
+};
+
+task('watch', done => {
+  const watchers = [
+    watch(['examples/**/*']).on('change', reloadExample),
+    watch(['src/**/*.js', 'src/**/*.html'], series(dev, 'browserify', reload)),
+    watch('src/**/*.css', series('copy-style', reload))
+  ];
+  process.on('SIGINT', () => {
+    console.log();
+    watchers.forEach(watcher => watcher.close());
+    done();
+  });
+});
+
+task('start', parallel('serve', 'watch'));

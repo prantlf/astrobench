@@ -22253,6 +22253,26 @@ var state = {
     index: 0
 };
 
+var deprecate = function(oldName, newName) {
+    console.log('The function "' + oldName + '" is deprecated. Use "' +
+        newName + '" instead.');
+}
+
+var Listeners = function() {
+    this.callbacks = [];
+    this.runner = this.run.bind(this);
+};
+
+Listeners.prototype.add = function(callback) {
+    this.callbacks.push(callback);
+}
+
+Listeners.prototype.run = function() {
+    this.callbacks.forEach(function (callback) {
+        callback();
+    });
+}
+
 var Suite = function(name, fn) {
     // update global state
     state.describes.push(this);
@@ -22261,6 +22281,10 @@ var Suite = function(name, fn) {
     this.id = _.uniqueId('suite');
     this.sandbox = {};
     this.suite = new Benchmark.Suite(name);
+    this.beforeSuiteListeners = new Listeners();
+    this.afterSuiteListeners = new Listeners();
+    this.beforeBenchListeners = new Listeners();
+    this.afterBenchListeners = new Listeners();
 
     setTimeout(ui.drawSuite.bind(this, this));
 
@@ -22269,11 +22293,29 @@ var Suite = function(name, fn) {
 
 Suite.prototype = {
     setup: function(fn) {
+        deprecate('setup', 'beforeBench');
         this.setupFn = fn;
     },
 
     after: function(fn) {
+        deprecate('after', 'afterBench');
         this.afterFn = fn;
+    },
+
+    beforeSuite: function(fn) {
+        this.beforeSuiteListeners.add(fn);
+    },
+
+    afterSuite: function(fn) {
+        this.afterSuiteListeners.add(fn);
+    },
+
+    beforeBench: function(fn) {
+        this.beforeBenchListeners.add(fn);
+    },
+
+    afterBench: function(fn) {
+        this.afterBenchListeners.add(fn);
     },
 
     add: function(name, fn, options) {
@@ -22288,6 +22330,8 @@ Suite.prototype = {
 
         bench.originFn = fn;
         bench.originOption = options;
+        bench.on('start', this.beforeBenchListeners.runner);
+        bench.on('complete', this.afterBenchListeners.runner);
 
         setTimeout(ui.drawBench.bind(this, this, bench));
     },
@@ -22326,6 +22370,14 @@ var setup = function(fn) {
 
 var after = function(fn) {
     state.currentSuite.after(fn);
+};
+
+var beforeBench = function(fn) {
+    state.currentSuite.beforeBench(fn);
+};
+
+var afterBench = function(fn) {
+    state.currentSuite.afterBench(fn);
 };
 
 var run = function(options) {
@@ -22370,8 +22422,10 @@ window.suite = function(name, fn) {
     return new Suite(name, fn);
 };
 window.setup = setup;
+window.beforeBench = beforeBench;
 window.bench = bench;
 window.after = after;
+window.afterBench = afterBench;
 
 window.astrobench = run;
 
@@ -22426,9 +22480,36 @@ __p+='<div class="suite" id="'+
 '</a>\n\t\t</span>\n\t</div>\n\t<div class="suite-setup hidden">\n\t\t';
  if(suite.setupFn) { 
 __p+='\n\t\t<pre><code>'+
-((__t=( hilite('// Preparation code\n') + hilite(fnstrip(suite.setupFn)) ))==null?'':__t)+
+((__t=( hilite('// Preparation code (deprecated)\n') + hilite(fnstrip(suite.setupFn)) ))==null?'':__t)+
 '</code></pre>\n\t\t';
- } else { 
+ } 
+__p+='\n\t\t';
+ if (suite.beforeSuiteListeners.callbacks.length) { 
+__p+='\n\t\t<pre><code>'+
+((__t=(
+			hilite('// Suite preparation code\n') +
+			suite.beforeSuiteListeners.callbacks
+				.map(function (callback) {
+					return hilite(fnstrip(callback));
+				})
+				.join('\n') ))==null?'':__t)+
+'</code></pre>\n\t\t';
+ } 
+__p+='\n\t\t';
+ if (suite.beforeBenchListeners.callbacks.length) { 
+__p+='\n\t\t<pre><code>'+
+((__t=(
+			hilite('// Benchmark preparation code\n') +
+			suite.beforeBenchListeners.callbacks
+				.map(function (callback) {
+					return hilite(fnstrip(callback));
+				})
+				.join('\n') ))==null?'':__t)+
+'</code></pre>\n\t\t';
+ } 
+__p+='\n\t\t';
+ if (!(suite.setupFn || suite.beforeSuiteListeners.callbacks.length ||
+					   suite.beforeBenchListeners.callbacks.length)) { 
 __p+='\n\t\t<pre><code>'+
 ((__t=( hilite('// No preparation code') ))==null?'':__t)+
 '</code></pre>\n\t\t';

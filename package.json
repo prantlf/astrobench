@@ -1,15 +1,45 @@
 {
-  "name": "astrobench",
-  "title": "Astrobench",
-  "version": "0.1.2",
-  "description": "Library for JavaScript benchmarks based on Benchmark.js",
+  "name": "@prantlf/astrobench",
+  "version": "1.0.0",
+  "description": "JavaScript benchmarks in web browser based on Benchmark.js",
+  "author": "Ferdinand Prantl <prantlf@gmail.com> (http://prantl.tk)",
+  "contributors": [
+    "Alexey Kupriyanenko <a.kupriyanenko@gmail.com>"
+  ],
+  "license": "MIT",
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "https://github.com/prantlf/astrobench/blob/master/LICENSE"
+    }
+  ],
+  "homepage": "https://github.com/kupriyanenko/astrobench",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/prantlf/astrobench"
+  },
+  "bugs": {
+    "url": "http://github.com/prantlf/astrobench/issues"
+  },
   "main": "dist/astrobench.js",
+  "engines": {
+    "node": ">=8"
+  },
   "files": [
     "dist"
   ],
-  "directories": {
-    "example": "examples"
+  "browserify": {
+    "transform": [
+      "node-underscorify"
+    ]
   },
+  "keywords": [
+    "benchmark",
+    "benchmark.js",
+    "puppeteer",
+    "speed",
+    "performance"
+  ],
   "dependencies": {
     "benchmark": "2.1.4",
     "browserify": "16.5.0",
@@ -26,23 +56,5 @@
     "node-underscorify": "0.0.14",
     "vinyl-buffer": "1.0.1",
     "vinyl-source-stream": "2.0.0"
-  },
-  "keywords": [
-    "benchmark",
-    "benchmark.js",
-    "speed",
-    "performance"
-  ],
-  "author": "Alexey Kupriyanenko <a.kupriyanenko@gmail.com>",
-  "license": "MIT",
-  "homepage": "https://github.com/kupriyanenko/astrobench",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/kupriyanenko/astrobench"
-  },
-  "browserify": {
-    "transform": [
-      "node-underscorify"
-    ]
   }
 }

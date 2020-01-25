@@ -1,41 +1,49 @@
-# Astrobench
+# @prantlf/astrobench
 
-[![NPM version](https://badge.fury.io/js/astrobench.svg)](http://badge.fury.io/js/astrobench)
+[![NPM version](https://badge.fury.io/js/%40prantlf%2Fastrobench.svg)](http://badge.fury.io/js/%40prantlf%2Fastrobench)
+[![Dependency Status](https://david-dm.org/prantlf/astrobench.svg)](https://david-dm.org/prantlf/astrobench)
+[![devDependency Status](https://david-dm.org/prantlf/astrobench/dev-status.svg)](https://david-dm.org/prantlf/astrobench#info=devDependencies)
 
 > Make the Web Faster
 
-JavaScript library for running in the browser performance benchmarks, based on Benchmark.js. [Live Demo](http://astrobench.js.org/)
+JavaScript library for running in the browser performance benchmarks, based on Benchmark.js. [Live Demo](http://prantlf.github.com/astrobench/)
 
 Easy way to create test cases. Provides rich and pretty UI.
 
 [![astro.png][2]][1]
 
+This fork enhances the original project with the following functionality:
+
+* Includes the most recent version of `Benchmark.js`.
+* Publishes minified script and stylesheet to reduce page loading times.
+* Offers global functions `beforeBench` `afterBench`, `beforeSuite` and `afterSuite` to register setup and teardown callbacks for the tests.
+* Allows command-line usage via [astrobench-cli](https://www.npmjs.com/package/astrobench-cli).
+
 ## Installation
 
-Install with [npm](https://www.npmjs.org/)
+Install with [npm](https://www.npmjs.org/):
 
 ```
-$ npm i astrobench
+npm i @prantlf/astrobench
 ```
 
-## Use it
+## Usage
+
+Create a HTML file in the directory where you installed the package:
 
 ```html
-$ npm i astrobench
-$ $EDITOR tests.html
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Performance tests</title>
-  <link rel="stylesheet" href="node_modules/astrobench/dist/astrobench.min.css">
+  <title>Performance Tests</title>
+  <link rel="stylesheet" href="node_modules/@prantlf/astrobench/dist/astrobench.min.css">
 </head>
 <body>
   <!-- Wrapper for tests -->
   <div id="astrobench"></div>
 
-  <script src="node_modules/astrobench/dist/astrobench.min.js"></script>
+  <script src="node_modules/@prantlf/astrobench/dist/astrobench.min.js"></script>
   <script>
     // A test suite begins with a call to the global function `suite`
     // with two parameters: a string and a function.
@@ -93,10 +101,11 @@ And enjoy the result.
 Instead of installing the package locally, you can load the script and stylesheet from [unpkg](https://unpkg.com). The URLs will look like this:
 
 ```html
-<link rel="stylesheet" href="https://unpkg.com/astrobench/dist/astrobench.min.css">
-<script src="https://unpkg.com/astrobench/dist/astrobench.min.js"></script>
+<link rel="stylesheet"
+      href="https://unpkg.com/@prantlf/astrobench@1.0.0/dist/astrobench.min.css">
+<script src="https://unpkg.com/@prantlf/astrobench@1.0.0/dist/astrobench.min.js"></script>
 ```
 
-[1]: http://astrobench.js.org
-[2]: https://cdn.rawgit.com/kupriyanenko/astrobench/gh-pages/astro.png
-[3]: https://cdn.rawgit.com/kupriyanenko/astrobench/gh-pages/sample.png
+[1]: http://prantlf.github.com/astrobench/
+[2]: https://cdn.rawgit.com/prantlf/astrobench/gh-pages/astro.png
+[3]: https://cdn.rawgit.com/prantlf/astrobench/gh-pages/sample.png

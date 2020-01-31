@@ -120,8 +120,8 @@ Copyright (c) 2020 Ferdinand Prantl
 Licensed under the MIT license.
 
 [1]: http://prantlf.github.com/astrobench/
-[2]: https://prantlf.github.io/astrobench/astro.png
-[3]: https://prantlf.github.io/astrobench/sample.png
+[2]: doc/astro.png
+[3]: doc/sample.png
 [unpkg]: https://unpkg.com
 [live demo]: http://prantlf.github.com/astrobench/
 [astrobench-cli]: https://www.npmjs.com/package/astrobench-cli

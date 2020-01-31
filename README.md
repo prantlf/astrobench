@@ -6,7 +6,7 @@
 
 > Make the Web Faster
 
-JavaScript library for running in the browser performance benchmarks, based on Benchmark.js. [Live Demo](http://prantlf.github.com/astrobench/)
+JavaScript library for running in the browser performance benchmarks, based on Benchmark.js. Try the [live demo].
 
 Easy way to create test cases. Provides rich and pretty UI.
 
@@ -17,19 +17,30 @@ This fork enhances the original project with the following functionality:
 * Includes the most recent version of `Benchmark.js`.
 * Publishes minified script and stylesheet to reduce page loading times.
 * Offers global functions `beforeBench` `afterBench`, `beforeSuite` and `afterSuite` to register setup and teardown callbacks for the tests.
-* Allows command-line usage via [astrobench-cli](https://www.npmjs.com/package/astrobench-cli).
+* Allows command-line usage via [astrobench-cli].
 
-## Installation
+## With Installation
 
-Install with [npm](https://www.npmjs.org/):
+Make sure that you have [NodeJS] >= 8 installed. Install `astrobench` with [npm] or [yarn]:
 
 ```
 npm i @prantlf/astrobench
+yarn add @prantlf/astrobench
+```
+
+## Without Installation
+
+Instead of installing the package locally, you can load the script and stylesheet in the example below from [unpkg]. The URLs will look like this:
+
+```html
+<link rel="stylesheet"
+      href="https://unpkg.com/@prantlf/astrobench@1.0.0/dist/astrobench.min.css">
+<script src="https://unpkg.com/@prantlf/astrobench@1.0.0/dist/astrobench.min.js"></script>
 ```
 
 ## Usage
 
-Create a HTML file in the directory where you installed the package:
+Create a HTML file in the directory where you installed the package, or anywhere using the URLs from [unpkg] above:
 
 ```html
 <!DOCTYPE html>
@@ -96,16 +107,24 @@ And enjoy the result.
 
 [![sample.png][3]][1]
 
-## Without Installation
+## Contributing
 
-Instead of installing the package locally, you can load the script and stylesheet from [unpkg](https://unpkg.com). The URLs will look like this:
+In lieu of a formal styleguide, take care to maintain the existing coding
+style.  Add unit tests for any new or changed functionality. Lint and test
+your code using Grunt.
 
-```html
-<link rel="stylesheet"
-      href="https://unpkg.com/@prantlf/astrobench@1.0.0/dist/astrobench.min.css">
-<script src="https://unpkg.com/@prantlf/astrobench@1.0.0/dist/astrobench.min.js"></script>
-```
+## License
+
+Copyright (c) 2020 Ferdinand Prantl
+
+Licensed under the MIT license.
 
 [1]: http://prantlf.github.com/astrobench/
 [2]: https://cdn.rawgit.com/prantlf/astrobench/gh-pages/astro.png
 [3]: https://cdn.rawgit.com/prantlf/astrobench/gh-pages/sample.png
+[unpkg]: https://unpkg.com
+[live demo]: http://prantlf.github.com/astrobench/
+[astrobench-cli]: https://www.npmjs.com/package/astrobench-cli
+[NodeJS]: http://nodejs.org/
+[npm]: https://www.npmjs.org/
+[yarn]: https://yarnpkg.com/

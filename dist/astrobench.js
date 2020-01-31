@@ -1,10 +1,10 @@
 /*!
- * Astrobench - 0.1.2
- * Library for JavaScript benchmarks based on Benchmark.js
+ *  - 1.0.0
+ * JavaScript benchmarks in web browser based on Benchmark.js
  *
  * https://github.com/kupriyanenko/astrobench
  *
- * Copyright Alexey Kupriyanenko <a.kupriyanenko@gmail.com>
+ * Copyright Ferdinand Prantl <prantlf@gmail.com> (http://prantl.tk)
  * Released under the MIT license.
  */(function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
 (function (global){
@@ -22382,16 +22382,24 @@ var afterBench = function(fn) {
 
 var run = function(options) {
     var suite = state.describes[state.index],
+        onCycle = function() {
+            state.benchIndex++;
+        },
         onComplete = function() {
             state.index++;
-            suite.suite.off('complete', onComplete);
+            suite.suite
+              .off('cycle', onCycle)
+              .off('complete', onComplete);
             run(options);
         };
 
     if (suite && !state.aborted) {
+        state.benchIndex = 0;
         state.running = true;
         suite.run();
-        suite.suite.on('complete', onComplete);
+        suite.suite
+            .on('cycle', onCycle)
+            .on('complete', onComplete);
     } else {
         state.index = 0;
         state.running = false;
@@ -22402,7 +22410,7 @@ var run = function(options) {
     }
 };
 
-run.options = function(options) {
+var options = function(options) {
     _.assign(globalOptions, options);
 };
 
@@ -22413,6 +22421,10 @@ var abort = function() {
         state.aborted = true;
     }
 };
+
+run.options = options;
+run.state = state;
+run.abort = abort;
 
 exports.state = state;
 exports.run = run;
@@ -22571,7 +22583,10 @@ var onBenchComplete = function(event, suite) {
         id = me.id,
         result = '',
         $bench = $('#bench-' + id),
-        $results = $bench.find('.fn-bench-result');
+        $results = $bench.find('.fn-bench-result'),
+        ops,
+        mean,
+        rme;
 
     $bench.find('.fn-run-bench').html(dictionary.runBenchmark);
 
@@ -22584,11 +22599,15 @@ var onBenchComplete = function(event, suite) {
             return $bench.find('.fn-bench-state').html('aborted');
         }
 
-        result += ' x ' + Benchmark.formatNumber(hz.toFixed(hz < 100 ? 2 : 0)) + ' ops/sec ';
+        ops = Benchmark.formatNumber(hz.toFixed(hz < 100 ? 2 : 0));
+        result += ' x ' + ops + ' ops/sec ';
         if (hz < 500) {
-            result += (stats.mean * 1000).toFixed(1) + 'ms ';
+            mean = (stats.mean * 1000).toFixed(1);
+            result += mean + 'ms ';
         }
-        result += '±' + stats.rme.toFixed(2) + '%';
+        rme = stats.rme.toFixed(2);
+        result += '±' + rme + '%';
+        me.sum = { ops: ops, mean: mean, rme:rme }
     }
 
     if (suite && suite.suite.running === false) {
@@ -22614,6 +22633,7 @@ var onSuiteComplete = function(event, suite) {
         $bench = $('#bench-' + bench.id);
 
         if (fastest.indexOf(bench) !== -1) {
+            bench.sum.fastest = true;
             $bench[0].classList.add('fastest');
             $bench.find('.fn-bench-status').html('(fastest)');
             return;
@@ -22628,6 +22648,7 @@ var onSuiteComplete = function(event, suite) {
         }
 
         delta = (Math.abs(bench.hz - hz) / hz * 100).toFixed(2);
+        bench.sum.delta = delta;
         $bench.removeClass('fastest');
         $bench.find('.fn-bench-status').html('(' + delta + '% slower)');
         $bench.find('.bench-background').css('width', ((bench.hz / hz) * 100) + '%');

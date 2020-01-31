@@ -1,5 +1,5 @@
 /*!
- *  - 1.0.0
+ *  - 1.0.1
  * JavaScript benchmarks in web browser based on Benchmark.js
  *
  * https://github.com/kupriyanenko/astrobench

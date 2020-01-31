@@ -34,8 +34,8 @@ Instead of installing the package locally, you can load the script and styleshee
 
 ```html
 <link rel="stylesheet"
-      href="https://unpkg.com/@prantlf/astrobench@1.0.0/dist/astrobench.min.css">
-<script src="https://unpkg.com/@prantlf/astrobench@1.0.0/dist/astrobench.min.js"></script>
+      href="https://unpkg.com/@prantlf/astrobench@1.0.1/dist/astrobench.min.css">
+<script src="https://unpkg.com/@prantlf/astrobench@1.0.1/dist/astrobench.min.js"></script>
 ```
 
 ## Usage

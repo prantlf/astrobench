@@ -1,6 +1,6 @@
 {
   "name": "@prantlf/astrobench",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "JavaScript benchmarks in web browser based on Benchmark.js",
   "author": "Ferdinand Prantl <prantlf@gmail.com> (http://prantl.tk)",
   "contributors": [

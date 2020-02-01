@@ -40,10 +40,11 @@ task('minify-style', () =>
   src('dist/astrobench.css')
     .pipe(sourcemaps.init())
     .pipe(csso())
+    .pipe(rename({ extname: '.min.css' }))
     .pipe(sourcemaps.write('.'))
     .pipe(dest('dist')));
 
-task('style', series('copy-style', 'copy-style'))
+task('style', series('copy-style', 'minify-style'))
 
 task('default', parallel('code', 'style'));
 

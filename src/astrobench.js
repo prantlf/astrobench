@@ -37,9 +37,8 @@ Listeners.prototype.run = function() {
 }
 
 var Suite = function(name, fn, options) {
-    var wrappedOptions = options;
     if (!_.isEmpty(commonSuiteOptions)) {
-        wrappedOptions = _.extend({}, wrappedOptions, commonSuiteOptions);
+        options = _.extend({}, options, commonSuiteOptions);
     }
 
     // update global state
@@ -48,7 +47,8 @@ var Suite = function(name, fn, options) {
 
     this.id = _.uniqueId('suite');
     this.sandbox = {};
-    this.suite = new Benchmark.Suite(name, wrappedOptions);
+    this.suite = new Benchmark.Suite(name, options);
+    this.originOption = options;
     this.beforeSuiteListeners = new Listeners();
     this.afterSuiteListeners = new Listeners();
     this.beforeBenchListeners = new Listeners();
@@ -87,15 +87,14 @@ Suite.prototype = {
     },
 
     add: function(name, fn, options) {
-        var wrappedOptions = options;
         if (this.setupFn || this.afterFn || !_.isEmpty(commonBenchOptions)) {
-            wrappedOptions = _.extend({}, wrappedOptions, commonBenchOptions, {
+            options = _.extend({}, options, commonBenchOptions, {
                 onStart: this.setupFn,
                 onComplete: this.afterFn
             });
         }
 
-        var bench = _.last(this.suite.add(name, fn, wrappedOptions));
+        var bench = _.last(this.suite.add(name, fn, options));
         bench.originFn = fn;
         bench.originOption = options;
         bench.on('start', this.beforeBenchListeners.runner);

@@ -5,7 +5,7 @@ const browserify = require('browserify');
 const source = require('vinyl-source-stream');
 const buffer = require('vinyl-buffer');
 const header = require('gulp-header');
-const concat = require('gulp-concat');
+const rename =  require('gulp-rename');
 const uglify = require('gulp-uglify');
 const csso = require('gulp-csso');
 const sourcemaps = require('gulp-sourcemaps');
@@ -21,46 +21,45 @@ const banner = `/*!
  * Released under the <%= pkg.license %> license.
  */`
 
-let browserifyConfig = { debug: false };
-
-const dev = done => {
-  browserifyConfig = { debug: true };
-  done();
-};
-
-task('browserify', () =>
-  browserify(Object.assign({ entries: './src/ui.js' }, browserifyConfig))
+task('compile-code', () =>
+  browserify(Object.assign({ entries: 'src/ui.js' }, { debug: true }))
     .bundle()
     .pipe(source('astrobench.js'))
     .pipe(buffer())
     .pipe(sourcemaps.init({ loadMaps: true }))
     .pipe(header(banner, { pkg: pkg }))
     .on('error', () => this.emit('end'))
-    .pipe(sourcemaps.write('./'))
-    .pipe(dest('./dist/')));
+    .pipe(sourcemaps.write('.'))
+    .pipe(dest('dist')));
 
-task('uglify', () =>
-  src('./dist/astrobench.js')
+task('minify-code', () =>
+  src('dist/astrobench.js')
+    .pipe(sourcemaps.init({ loadMaps: true }))
     .pipe(uglify({
       output: { comments: 'some' }
     }))
-    .pipe(concat('astrobench.min.js'))
-    .pipe(dest('./dist/')));
+    .on('error', log.error)
+    .pipe(rename({ extname: '.min.js' }))
+    .pipe(sourcemaps.write('.'))
+    .pipe(dest('dist')));
+
+task('code', series('compile-code', 'minify-code'))
 
 task('copy-style', () =>
-  src('./src/style.css')
-    .pipe(concat('astrobench.css'))
-    .pipe(dest('./dist/')));
+  src('src/style.css')
+    .pipe(rename('astrobench.css'))
+    .pipe(dest('dist')));
 
 task('minify-style', () =>
-  src('./dist/astrobench.css')
+  src('dist/astrobench.css')
     .pipe(sourcemaps.init())
     .pipe(csso())
-    .pipe(sourcemaps.write('./'))
-    .pipe(dest('./dist/')));
+    .pipe(sourcemaps.write('.'))
+    .pipe(dest('dist')));
 
-task('default', parallel(
-  series('browserify', 'uglify'), series('copy-style', 'minify-style')));
+task('style', series('copy-style', 'copy-style'))
+
+task('default', parallel('code', 'style'));
 
 task('serve', done => {
   connect.server({
@@ -84,7 +83,7 @@ const reloadExample = file => {
 task('watch', done => {
   const watchers = [
     watch(['examples/**/*']).on('change', reloadExample),
-    watch(['src/**/*.js', 'src/**/*.html'], series(dev, 'browserify', reload)),
+    watch(['src/**/*.js', 'src/**/*.html'], series('compile-code', reload)),
     watch('src/**/*.css', series('copy-style', reload))
   ];
   process.on('SIGINT', () => {

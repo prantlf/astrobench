@@ -5,7 +5,8 @@ var ui = require('./ui');
 
 window.Benchmark = Benchmark;
 
-var globalOptions = {};
+var commonSuiteOptions = {};
+var commonBenchOptions = {};
 
 var state = {
     describes: [],
@@ -35,14 +36,19 @@ Listeners.prototype.run = function() {
     });
 }
 
-var Suite = function(name, fn) {
+var Suite = function(name, fn, options) {
+    var wrappedOptions = options;
+    if (!_.isEmpty(commonSuiteOptions)) {
+        wrappedOptions = _.extend({}, wrappedOptions, commonSuiteOptions);
+    }
+
     // update global state
     state.describes.push(this);
     state.currentSuite = this;
 
     this.id = _.uniqueId('suite');
     this.sandbox = {};
-    this.suite = new Benchmark.Suite(name);
+    this.suite = new Benchmark.Suite(name, wrappedOptions);
     this.beforeSuiteListeners = new Listeners();
     this.afterSuiteListeners = new Listeners();
     this.beforeBenchListeners = new Listeners();
@@ -82,8 +88,8 @@ Suite.prototype = {
 
     add: function(name, fn, options) {
         var wrappedOptions = options;
-        if (this.setupFn || this.afterFn || !_.isEmpty(globalOptions)) {
-            wrappedOptions = _.extend({}, wrappedOptions, globalOptions, {
+        if (this.setupFn || this.afterFn || !_.isEmpty(commonBenchOptions)) {
+            wrappedOptions = _.extend({}, wrappedOptions, commonBenchOptions, {
                 onStart: this.setupFn,
                 onComplete: this.afterFn
             });
@@ -181,7 +187,16 @@ var run = function(options) {
 };
 
 var options = function(options) {
-    _.assign(globalOptions, options);
+    deprecate('options', 'benchOptions');
+    benchOptions(options);
+};
+
+var benchOptions = function(options) {
+    _.assign(commonBenchOptions, options);
+};
+
+var suiteOptions = function(options) {
+    _.assign(commonSuiteOptions, options);
 };
 
 var abort = function() {
@@ -200,9 +215,11 @@ exports.state = state;
 exports.run = run;
 exports.abort = abort;
 
-window.suite = function(name, fn) {
-    return new Suite(name, fn);
+window.suite = function(name, fn, options) {
+    return new Suite(name, fn, options);
 };
+window.suiteOptions = suiteOptions;
+window.benchOptions = benchOptions;
 window.setup = setup;
 window.beforeSuite = beforeSuite;
 window.beforeBench = beforeBench;

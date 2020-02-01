@@ -18,11 +18,12 @@ This fork enhances the original project with the following functionality:
 * Includes the most recent version of `Benchmark.js`.
 * Publishes minified script and stylesheet to reduce page loading times.
 * Offers global functions `beforeBench` `afterBench`, `beforeSuite` and `afterSuite` to register setup and teardown callbacks for the tests.
+* Offers global functions `suiteOptions` and `benchOptions` to set options for all suites and benchmarks.
 * Allows command-line usage via [astrobench-cli].
 
 ## With Installation
 
-Make sure that you have [NodeJS] >= 8 installed. Install `astrobench` with [npm] or [yarn]:
+Make sure that you have [Node.js] >= 8 installed. Install `astrobench` with [npm] or [yarn]:
 
 ```
 npm i @prantlf/astrobench
@@ -127,6 +128,6 @@ Licensed under the MIT license.
 [unpkg]: https://unpkg.com
 [live demo]: http://prantlf.github.com/astrobench/
 [astrobench-cli]: https://www.npmjs.com/package/astrobench-cli
-[NodeJS]: http://nodejs.org/
+[Node.js]: http://nodejs.org/
 [npm]: https://www.npmjs.org/
 [yarn]: https://yarnpkg.com/

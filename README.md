@@ -19,6 +19,7 @@ This fork enhances the original project with the following functionality:
 * Publishes minified script and stylesheet to reduce page loading times.
 * Offers global functions `beforeBench` `afterBench`, `beforeSuite` and `afterSuite` to register setup and teardown callbacks for the tests.
 * Offers global functions `suiteOptions` and `benchOptions` to set options for all suites and benchmarks.
+* Can disable emphasizing the fastest test and showing by how many percent are the others slower.
 * Allows command-line usage via [astrobench-cli].
 
 ## With Installation

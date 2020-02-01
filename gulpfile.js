@@ -11,8 +11,6 @@ const sourcemaps = require('gulp-sourcemaps');
 
 task('compile-code', () =>
   browserify(Object.assign({ entries: 'src/ui.js' }, { debug: true }))
-    .plugin('browser-pack-flat')
-    .plugin('common-shakeify')
     .bundle()
     .pipe(source('astrobench.js'))
     .pipe(buffer())

@@ -76,7 +76,7 @@ var onBenchComplete = function(event, suite) {
 var onSuiteComplete = function(event, suite) {
     suite.$el.find('.fn-run-suite').html(dictionary.runSuite);
 
-    if (event.target.aborted) return;
+    if (event.target.aborted || this.comparison === false) return;
 
     var fastest = this.filter('fastest'),
         delta,

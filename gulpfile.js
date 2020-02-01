@@ -4,22 +4,10 @@ const connect = require('gulp-connect');
 const browserify = require('browserify');
 const source = require('vinyl-source-stream');
 const buffer = require('vinyl-buffer');
-const header = require('gulp-header');
 const rename =  require('gulp-rename');
 const uglify = require('gulp-uglify');
 const csso = require('gulp-csso');
 const sourcemaps = require('gulp-sourcemaps');
-
-const pkg = require('./package.json');
-const banner = `/*!
- * <%= pkg.title %> - <%= pkg.version %>
- * <%= pkg.description %>
- *
- * <%= pkg.homepage %>
- *
- * Copyright <%= pkg.author %>
- * Released under the <%= pkg.license %> license.
- */`
 
 task('compile-code', () =>
   browserify(Object.assign({ entries: 'src/ui.js' }, { debug: true }))
@@ -27,8 +15,6 @@ task('compile-code', () =>
     .pipe(source('astrobench.js'))
     .pipe(buffer())
     .pipe(sourcemaps.init({ loadMaps: true }))
-    .pipe(header(banner, { pkg: pkg }))
-    .on('error', () => this.emit('end'))
     .pipe(sourcemaps.write('.'))
     .pipe(dest('dist')));
 

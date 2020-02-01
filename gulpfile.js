@@ -11,6 +11,8 @@ const sourcemaps = require('gulp-sourcemaps');
 
 task('compile-code', () =>
   browserify(Object.assign({ entries: 'src/ui.js' }, { debug: true }))
+    .plugin('browser-pack-flat')
+    .plugin('common-shakeify')
     .bundle()
     .pipe(source('astrobench.js'))
     .pipe(buffer())
@@ -21,9 +23,7 @@ task('compile-code', () =>
 task('minify-code', () =>
   src('dist/astrobench.js')
     .pipe(sourcemaps.init({ loadMaps: true }))
-    .pipe(uglify({
-      output: { comments: 'some' }
-    }))
+    .pipe(uglify())
     .on('error', log.error)
     .pipe(rename({ extname: '.min.js' }))
     .pipe(sourcemaps.write('.'))

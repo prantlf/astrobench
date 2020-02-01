@@ -78,4 +78,4 @@ task('watch', done => {
   });
 });
 
-task('start', parallel('serve', 'watch'));
+task('start', parallel('compile-code', 'copy-style', 'serve', 'watch'));

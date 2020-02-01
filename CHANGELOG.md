@@ -1,3 +1,18 @@
+# [1.0.5](https://github.com/prantlf/astrobench/compare/v1.0.4...v1.0.5) (2020-02-01)
+
+### Bug Fixes
+
+* Remove previous optimizations that broke lodach browserifying ([332d78a](https://github.com/prantlf/astrobench/commit/332d78a61dc971ba0729c669fd40e5ec2283d649))
+
+# [1.0.4](https://github.com/prantlf/astrobench/compare/v1.0.3...v1.0.4) (2020-02-01)
+
+### Bug Fixes
+
+* Fix sourcemaps for minified and not minified stylesheets ([61cd914](https://github.com/prantlf/astrobench/commit/61cd914b9c4747fc2fa5f6e2f01efab2227c4099))
+* Fix sourcemaps for the not minified script ([1d5d4c8](https://github.com/prantlf/astrobench/commit/1d5d4c8d94b228aad220e52fd845a2609eeceeb6))
+* Hilight original caller's options; not the internally extend ones ([9806b5e](https://github.com/prantlf/astrobench/commit/9806b5e290c17b318e5dc265a1c2d1e0f090acee))
+* Reduce the package size by flattening require modules and dropping unused code ([65fbd49](https://github.com/prantlf/astrobench/commit/65fbd496a1e4eb352a82c053e5f0360c43ce0acd))
+
 # [1.0.3](https://github.com/prantlf/astrobench/compare/v1.0.2...v1.0.3) (2020-02-01)
 
 ### Bug Fixes

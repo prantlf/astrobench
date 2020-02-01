@@ -81,15 +81,15 @@ Suite.prototype = {
     },
 
     add: function(name, fn, options) {
+        var wrappedOptions = options;
         if (this.setupFn || this.afterFn || !_.isEmpty(globalOptions)) {
-            options = _.extend({}, options, globalOptions, {
+            wrappedOptions = _.extend({}, wrappedOptions, globalOptions, {
                 onStart: this.setupFn,
                 onComplete: this.afterFn
             });
         }
 
-        var bench = _.last(this.suite.add(name, fn, options));
-
+        var bench = _.last(this.suite.add(name, fn, wrappedOptions));
         bench.originFn = fn;
         bench.originOption = options;
         bench.on('start', this.beforeBenchListeners.runner);

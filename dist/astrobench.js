@@ -22238,7 +22238,8 @@ var ui = require('./ui');
 
 window.Benchmark = Benchmark;
 
-var globalOptions = {};
+var commonSuiteOptions = {};
+var commonBenchOptions = {};
 
 var state = {
     describes: [],
@@ -22268,14 +22269,19 @@ Listeners.prototype.run = function() {
     });
 }
 
-var Suite = function(name, fn) {
+var Suite = function(name, fn, options) {
+    if (!_.isEmpty(commonSuiteOptions)) {
+        options = _.extend({}, options, commonSuiteOptions);
+    }
+
     // update global state
     state.describes.push(this);
     state.currentSuite = this;
 
     this.id = _.uniqueId('suite');
     this.sandbox = {};
-    this.suite = new Benchmark.Suite(name);
+    this.suite = new Benchmark.Suite(name, options);
+    this.originOption = options;
     this.beforeSuiteListeners = new Listeners();
     this.afterSuiteListeners = new Listeners();
     this.beforeBenchListeners = new Listeners();
@@ -22314,15 +22320,14 @@ Suite.prototype = {
     },
 
     add: function(name, fn, options) {
-        var wrappedOptions = options;
-        if (this.setupFn || this.afterFn || !_.isEmpty(globalOptions)) {
-            wrappedOptions = _.extend({}, wrappedOptions, globalOptions, {
+        if (this.setupFn || this.afterFn || !_.isEmpty(commonBenchOptions)) {
+            options = _.extend({}, options, commonBenchOptions, {
                 onStart: this.setupFn,
                 onComplete: this.afterFn
             });
         }
 
-        var bench = _.last(this.suite.add(name, fn, wrappedOptions));
+        var bench = _.last(this.suite.add(name, fn, options));
         bench.originFn = fn;
         bench.originOption = options;
         bench.on('start', this.beforeBenchListeners.runner);
@@ -22414,7 +22419,16 @@ var run = function(options) {
 };
 
 var options = function(options) {
-    _.assign(globalOptions, options);
+    deprecate('options', 'benchOptions');
+    benchOptions(options);
+};
+
+var benchOptions = function(options) {
+    _.assign(commonBenchOptions, options);
+};
+
+var suiteOptions = function(options) {
+    _.assign(commonSuiteOptions, options);
 };
 
 var abort = function() {
@@ -22433,9 +22447,11 @@ exports.state = state;
 exports.run = run;
 exports.abort = abort;
 
-window.suite = function(name, fn) {
-    return new Suite(name, fn);
+window.suite = function(name, fn, options) {
+    return new Suite(name, fn, options);
 };
+window.suiteOptions = suiteOptions;
+window.benchOptions = benchOptions;
 window.setup = setup;
 window.beforeSuite = beforeSuite;
 window.beforeBench = beforeBench;
@@ -22495,40 +22511,49 @@ __p+='<div class="suite" id="'+
 '</h1>\n\t\t<span class="suite-controls">\n\t\t\t<a href="#" class="fn-run-suite">'+
 ((__t=( dictionary.runSuite ))==null?'':__t)+
 '</a>\n\t\t</span>\n\t</div>\n\t<div class="suite-setup hidden">\n\t\t';
- if(suite.setupFn) { 
-__p+='\n\t\t<pre><code>'+
-((__t=( hilite('// Preparation code (deprecated)\n') + hilite(fnstrip(suite.setupFn)) ))==null?'':__t)+
-'</code></pre>\n\t\t';
- } 
+
+		var code = '';
+		if (suite.originOption) {
+			code += hilite('// options\n');
+			code += hilite(JSON.stringify(suite.originOption, null, 2));
+		}
+		if (suite.setupFn) {
+			if (code) {
+				code += '\n\n';
+			}
+		  code += hilite('// suite preparation code (deprecated)\n');
+		  code += hilite(fnstrip(suite.setupFn));
+		}
+		if (suite.beforeSuiteListeners.callbacks.length) {
+			if (code) {
+				code += '\n\n';
+			}
+			code += hilite('// suite preparation code');
+			suite.beforeSuiteListeners.callbacks.forEach(function (callback) {
+				code +=  '\n' + hilite(fnstrip(callback));
+			});
+		}
+		if (suite.beforeBenchListeners.callbacks.length) {
+			if (code) {
+				code += '\n\n';
+			}
+			code += hilite('// benchmark preparation code');
+			suite.beforeBenchListeners.callbacks.forEach(function (callback) {
+				code += '\n' + hilite(fnstrip(callback));
+			});
+		}
+		if (!(suite.setupFn || suite.beforeSuiteListeners.callbacks.length ||
+					suite.beforeBenchListeners.callbacks.length)) {
+			if (code) {
+				code += '\n\n';
+			}
+			code += hilite('// no preparation code');
+		}
+		
 __p+='\n\t\t';
- if (suite.beforeSuiteListeners.callbacks.length) { 
+ if (code) { 
 __p+='\n\t\t<pre><code>'+
-((__t=(
-			hilite('// Suite preparation code\n') +
-			suite.beforeSuiteListeners.callbacks
-				.map(function (callback) {
-					return hilite(fnstrip(callback));
-				})
-				.join('\n') ))==null?'':__t)+
-'</code></pre>\n\t\t';
- } 
-__p+='\n\t\t';
- if (suite.beforeBenchListeners.callbacks.length) { 
-__p+='\n\t\t<pre><code>'+
-((__t=(
-			hilite('// Benchmark preparation code\n') +
-			suite.beforeBenchListeners.callbacks
-				.map(function (callback) {
-					return hilite(fnstrip(callback));
-				})
-				.join('\n') ))==null?'':__t)+
-'</code></pre>\n\t\t';
- } 
-__p+='\n\t\t';
- if (!(suite.setupFn || suite.beforeSuiteListeners.callbacks.length ||
-					   suite.beforeBenchListeners.callbacks.length)) { 
-__p+='\n\t\t<pre><code>'+
-((__t=( hilite('// No preparation code') ))==null?'':__t)+
+((__t=( code ))==null?'':__t)+
 '</code></pre>\n\t\t';
  } 
 __p+='\n\t</div>\n\t<div class="fn-benchs suite-bench-list"></div>\n</div>';
@@ -22625,7 +22650,7 @@ var onBenchComplete = function(event, suite) {
 var onSuiteComplete = function(event, suite) {
     suite.$el.find('.fn-run-suite').html(dictionary.runSuite);
 
-    if (event.target.aborted) return;
+    if (event.target.aborted || this.comparison === false) return;
 
     var fastest = this.filter('fastest'),
         delta,

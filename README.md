@@ -23,7 +23,7 @@ This fork enhances the original project with the following functionality:
 
 ## With Installation
 
-Make sure that you have [Node.js] >= 8 installed. Install `astrobench` with [npm] or [yarn]:
+Make sure that you have [Node.js] >= 18 installed. Install `astrobench` with [npm] or [yarn]:
 
 ```
 npm i @prantlf/astrobench

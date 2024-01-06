@@ -1,9 +1,8 @@
 # @prantlf/astrobench
 
-[![NPM version](https://badge.fury.io/js/%40prantlf%2Fastrobench.svg)](http://badge.fury.io/js/%40prantlf%2Fastrobench)
-[![Build Status](https://travis-ci.org/prantlf/astrobench.png)](https://travis-ci.org/prantlf/astrobench)
-[![Dependency Status](https://david-dm.org/prantlf/astrobench.svg)](https://david-dm.org/prantlf/astrobench)
-[![devDependency Status](https://david-dm.org/prantlf/astrobench/dev-status.svg)](https://david-dm.org/prantlf/astrobench#info=devDependencies)
+[![Latest version](https://img.shields.io/npm/v/%40prantlf%2Fastrobench)
+ ![Dependency status](https://img.shields.io/librariesio/release/npm/%40prantlf%2Fastrobench)
+](https://www.npmjs.com/package/%40prantlf%2Fastrobench)
 
 > Make the Web Faster
 

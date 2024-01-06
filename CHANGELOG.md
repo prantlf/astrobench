@@ -1,3 +1,13 @@
+## [2.0.0](https://github.com/prantlf/astrobench/compare/v1.1.0...v2.0.0) (2024-01-06)
+
+### Bug Fixes
+
+* Upgrade dependencies ([a90bf75](https://github.com/prantlf/astrobench/commit/a90bf7506dfcb6e36038b9c7bf768dd2eee7ec5b))
+
+### BREAKING CHANGES
+
+The minimum supported version of Node.js is 18.
+
 ## [1.1.0](https://github.com/prantlf/astrobench/compare/v1.0.5...v1.1.0) (2020-02-01)
 
 ### Features

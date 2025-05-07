@@ -1,5 +1,11 @@
 # Changes
 
+## [2.1.0](https://github.com/prantlf/astrobench/compare/v2.0.0...v2.1.0) (2025-05-07)
+
+### Features
+
+* Upgrade dependencies ([7066bf1](https://github.com/prantlf/astrobench/commit/7066bf1d095aa875c04487ba90e4b924cb0b5f11))
+
 ## [2.0.0](https://github.com/prantlf/astrobench/compare/v1.1.0...v2.0.0) (2024-01-06)
 
 ### Bug Fixes

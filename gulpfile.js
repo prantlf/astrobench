@@ -5,7 +5,7 @@ const browserify = require('browserify');
 const source = require('vinyl-source-stream');
 const buffer = require('vinyl-buffer');
 const rename =  require('gulp-rename');
-const uglify = require('gulp-uglify');
+const uglify = require('gulp-uglify-es').default;
 const csso = require('gulp-csso');
 const sourcemaps = require('gulp-sourcemaps');
 

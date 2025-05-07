@@ -118,7 +118,7 @@ your code using Grunt.
 ## License
 
 Copyright (c) 2013-2019 Alexey Kupriyanenko<br>
-Copyright (c) 2020-2024 Ferdinand Prantl
+Copyright (c) 2020-2025 Ferdinand Prantl
 
 Licensed under the MIT license.
 
